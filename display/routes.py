@@ -4,18 +4,17 @@ from flask import render_template, redirect, url_for, flash
 def index():
     return render_template('display.html', display=model.display)
 
-@app.route('/start')
-def start():
-    try:
-        model.t.start()
-    except:
-        pass
-    flash('Started Timer')
+@app.route('/success')
+def new_success():
+    model.display.add_change(model.ChangeFactory.make_success())
     return redirect(url_for('index'))
 
-@app.route('/stop')
-def stop():
-    if not model.t.is_alive():
-        model.t.cancel()
-    flash('Stopped Timer')
+@app.route('/fail')
+def new_failure():
+    model.display.add_change(model.ChangeFactory.make_failure())
+    return redirect(url_for('index'))
+
+@app.route('/random')
+def new_random():
+    model.display.add_change(model.ChangeFactory.make_change())
     return redirect(url_for('index'))

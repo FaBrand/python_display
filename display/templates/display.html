@@ -1,36 +1,47 @@
 {% extends "base.html" %}
 
 {% block app_content %}
-{% if display.is_success() %}
+{% if display.is_success %}
     <div style="background-color:lightgreen !important" class="jumbotron">
-      <h1 class="display-4">Currrent Status:</h1>
-      <h3 class="display-4">Success!</h3>
+      <h1 class="display-4">Success!</h1>
     </div>
 {% else %}
     <div style="background-color:indianred !important" class="jumbotron">
-      <h1 class="display-4">Currrent Status:</h1>
-      <h3 class="display-4">Failure</h3>
+      <h1 class="display-4">Failure</h1>
+      <hr class="my-4">
+      <p>Failing steps:</p>
     </div>
 {% endif %}
-<table class="table table-striped">
+<table class="table table-striped table-hover table-bordered">
+    <thead>
+        <tr>
+          <th scope="col"></th>
+          <th scope="col">Format</th>
+          <th scope="col">Build</th>
+          <th scope="col">Test</th>
+          <th scope="col">Int</th>
+        </tr>
+    </thead>
+    <tbody>
     {% for c in display.changes %}
     <tr>
-        <th {% if c.is_success() %} class="success" {% else %} class="danger" {% endif %} scope="row" style="width: 16.66%">
+        <th {% if c.is_success() %} class="success text-left" {% else %} class="danger text-left" {% endif %} scope="row" style="width: 16.66%">
             <p>{{ c.name }}</p>
-            <p>{{ c.time.strftime('%d.%m.%Y %H:%M') }}</p>
+            <p>{{ c.time.strftime('%d.%m.%Y %H:%M:%S') }}</p>
         </th>
         {% for r in c.results %}
-            {% if r.result %}
-                <td style="background-color: indianred">
+            {% if r.result == False %}
+                <td class="text-center align-middle" style="background-color: indianred">
                     <p>Failure</p>
                 </td>
             {% else %}
-                <td style="background-color: lightgreen">
+                <td class="text-center align-middle" style="background-color: lightgreen">
                     <p>Success</p>
                 </td>
             {% endif %}
         {% endfor %}
     </tr>
     {% endfor %}
+    </tbody>
 </table>
 {% endblock %}
