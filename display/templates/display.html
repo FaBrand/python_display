@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+{% if display.is_success() %}
+    <div style="background-color:lightgreen !important" class="jumbotron">
+      <h1 class="display-4">Currrent Status:</h1>
+      <h3 class="display-4">Success!</h3>
+    </div>
+{% else %}
+    <div style="background-color:indianred !important" class="jumbotron">
+      <h1 class="display-4">Currrent Status:</h1>
+      <h3 class="display-4">Failure</h3>
+    </div>
+{% endif %}
+<table class="table table-striped">
+    {% for c in display.changes %}
+    <tr>
+        <th {% if c.is_success() %} class="success" {% else %} class="danger" {% endif %} scope="row" style="width: 16.66%">
+            <p>{{ c.name }}</p>
+            <p>{{ c.time.strftime('%d.%m.%Y %H:%M') }}</p>
+        </th>
+        {% for r in c.results %}
+            {% if r.result %}
+                <td style="background-color: indianred">
+                    <p>Failure</p>
+                </td>
+            {% else %}
+                <td style="background-color: lightgreen">
+                    <p>Success</p>
+                </td>
+            {% endif %}
+        {% endfor %}
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}
