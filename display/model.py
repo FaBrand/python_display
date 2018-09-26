@@ -1,6 +1,143 @@
+import enum
+from display import db
 from random import randint
 from datetime import datetime, timedelta
 import pytz
+
+required_jobs = db.Table('required_jobs',
+        db.Column('monitor_id', db.Integer, db.ForeignKey('monitor.id')),
+        db.Column('jobs_id', db.Integer, db.ForeignKey('jobs.id'))
+)
+
+
+class Jobs(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255), index=True, unique=True, nullable=False)
+    desciption = db.Column(db.Text, nullable=True)
+    pretty_name = db.relationship("PrettyJobs", back_populates="jobs", uselist=False)
+    builds = db.relationship("Builds", back_populates="jobs", uselist=False)
+
+    def __repr__(self):
+        return '<Jobs {}, {}>'.format(self.name, self.desciption)
+
+
+class PrettyJobs(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    pretty_name = db.Column(db.String(255), nullable=False)
+    jobs = db.relationship("Jobs", back_populates="pretty_name")
+    jobs_id = db.Column(db.Integer, db.ForeignKey('jobs.id'), unique=True)
+
+    def __repr__(self):
+        return '<PrettyJobs {}>'.format(self.pretty_name)
+
+
+class Monitor(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255), index=True, unique=True)
+    jobs = db.relationship('Jobs', secondary=required_jobs)
+
+
+class Builds(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    # state = db.Column('state', db.Enum(ResultStateEnum))
+    jobs_id = db.Column(db.Integer, db.ForeignKey("jobs.id"))
+    jobs = db.relationship("Jobs", back_populates="builds")
+
+    changes_id = db.Column(db.Integer, db.ForeignKey("changes.id"))
+    changes = db.relationship("Changes", back_populates="builds")
+
+
+class Changes(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    builds = db.relationship("Builds", back_populates="changes", uselist=False)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 class Result(object):
