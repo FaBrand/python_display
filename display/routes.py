@@ -1,5 +1,6 @@
 from display import app, model
 from flask import render_template, redirect, url_for, flash
+from model import Monitors
 @app.route('/')
 def index():
     return render_template('display.html', display=model.display)

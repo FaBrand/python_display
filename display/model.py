@@ -31,7 +31,7 @@ class PrettyJobs(db.Model):
         return '<PrettyJobs {}>'.format(self.pretty_name)
 
 
-class Monitor(db.Model):
+class Monitors(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), index=True, unique=True)
     jobs = db.relationship('Jobs', secondary=required_jobs)
